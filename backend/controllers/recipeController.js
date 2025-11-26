@@ -6,16 +6,40 @@ const searchRecipes = async (req, res) => {
   // console.log("BODY RECEIVED:", req.body);
   try {
     const { ingredients } = req.body;
-    const query = ingredients.join(",");
-    const forkifyUrl = `https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}`
+
+    if (!ingredients) {
+      return res.status(400).json({ message: "Ingredients are required" });
+    }
+
+    const query = Array.isArray(ingredients)
+      ? ingredients.join(",")
+      : ingredients; // already a string
+
+    const forkifyUrl = `https://forkify-api.herokuapp.com/api/v2/recipes?search=${query}`;
+
     const response = await axios.get(forkifyUrl);
-    res.send({
-      result: 200,
-      data: response.data.data.recipes,
+
+    res.status(200).json({
+      recipes: response.data.data.recipes,
     });
   } catch (err) {
-    res.status(500).send({ result: 500, error: err.message });
+    console.error("Forkify error:", err.response?.data || err.message);
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 };
 
-module.exports = { searchRecipes };
+const getRecipeById = async (req, res) => {
+  try {
+    const response = await axios.get(
+      `https://forkify-api.herokuapp.com/api/v2/recipes/${req.params.id}`
+    );
+    res.status(200).json({ recipe: response.data.data.recipe });
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching recipe" });
+  }
+};
+
+module.exports = {
+  searchRecipes,
+  getRecipeById,
+};

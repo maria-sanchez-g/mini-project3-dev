@@ -1,10 +1,11 @@
 import './App.css'
+import { AppRoutes } from './routes/AppRoutes'
 
 function App() {
 
   return (
     <>
-    <p>Mini project 3</p>
+      <AppRoutes />
     </>
   )
 }
