@@ -20,7 +20,7 @@ module.exports = function (req, res, next) {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     // 4. Attach user id to request
-    req.user = decoded.id;
+    req.user = { _id: decoded.id };
 
     next();
   } catch (err) {
