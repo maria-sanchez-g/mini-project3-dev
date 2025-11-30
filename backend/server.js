@@ -1,7 +1,7 @@
-const express = require("express");
+const express = require("express"); //In Node.js, require() is the built-in function used to import code from another file.
 const cors = require("cors");
 const colors = require("colors");
-const dotenv = require("dotenv").config();
+const dotenv = require("dotenv").config({ path: "./backend/.env" });
 
 // database connection logic
 const connectDB = require("./config/dbConnect");
@@ -23,10 +23,12 @@ connectDB();
 // import external routes
 const userRoutes = require("./routes/userRoutes");
 const recipeRoutes = require("./routes/recipeRoutes");
+const savedRecipeRoutes = require("./routes/savedRecipes");
 
 // use imported routes
 app.use("/api/users", userRoutes);
 app.use("/api/recipes", recipeRoutes);
+app.use("/api/saved", savedRecipeRoutes);  
 
 app.get("/", (req, res) => {
   res.send(`Mini project 3 group exercise<br>Express Backend`);

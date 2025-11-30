@@ -4,7 +4,7 @@ const mongoose = require("mongoose"); // MongoDB object modeling library
 const Schema = mongoose.Schema; 
 
 const userSchema = new Schema({
-  userName: { type: String, trim: true, required: true, unique: true},
+  name: { type: String, trim: true, required: true, unique: true},
   email: { type: String, trim: true, required: true, unique: true },
   password: { type: String },
 },

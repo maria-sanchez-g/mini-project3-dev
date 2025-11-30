@@ -1,4 +1,5 @@
 const Models = require("../models");
+const jwt = require("jsonwebtoken");
 
 const getAllUsers = (req, res) => {
   Models.User.find({})
@@ -9,27 +10,48 @@ const getAllUsers = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
-  const data = req.body;
-  console.log(data);
-  new Models.User(data)
-    .save()
-    .then((data) => res.send({ result: 200, data: data }))
-    .catch((err) => {
-      console.log(err);
-      res.send({ result: 500, error: err.message });
+const createUser = async (req, res) => {
+  try {
+    const { name, email, password } = req.body;
+
+    // Basic validation
+    if (!name || !email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Name, email and password are required" });
+    }
+
+    // Check if email already exists
+    const existing = await Models.User.findOne({ email });
+    if (existing) {
+      return res.status(400).json({ message: "Email already registered" });
+    }
+
+    const user = await Models.User.create({ name, email, password });
+
+    return res.status(201).json({
+      result: 201,
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
     });
+  } catch (err) {
+    console.error("createUser error:", err);
+    return res.status(500).json({ message: "Server error" });
+  }
 };
 
 const getUser = (req, res) => {
   const id = req.params.id;
   Models.User.findById(id)
-    .then((data) => res.send({ result: 200, data: data }))
+    .then((data) => res.send({result: 200, data: data}))
     .catch((err) => {
       console.log(err);
-      res.send({ result: 500, error: err.message });
+      res.send({result: 500, error: err.message })
     });
-};
+}
 
 const updateUser = (req, res) => {
   const data = req.body;
@@ -46,37 +68,43 @@ const updateUser = (req, res) => {
 const deleteUser = (req, res) => {
   const id = req.params.id;
   Models.User.findByIdAndDelete(id)
-    .then((data) => res.send({ result: 200, data: data }))
-    .catch((err) => {
-      console.log(err);
-      res.send({ result: 500, error: err.message });
-    });
-};
-
-const registerUser = async (req, res) => {
-  try {
-    const user = await Models.User.create(req.body);  // shotcut for save()
-    res.status(201).json({ message: "User registered!", user });
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
+    .then(data => res.send({result: 200, data: data}))
+    .catch(err => {
+        console.log(err);
+        res.send({result: 500, error: err.message})
+    })
 };
 
 const loginUser = async (req, res) => {
   try {
-    const user = await Models.User.findOne({
-      username: req.body.username,
-      password: req.body.password,
-    });
+    const { email, password } = req.body;
 
-    if (!user) return res.status(401).json({ message: "Invalid credentials" });
+    const user = await Models.User.findOne({ email });
 
-    res.json({
-      message: "Login successful",
-      user: { _id: user._id, username: user.username },
+    // If no user or wrong password, send the same message
+    if (!user || user.password !== password) {
+      return res.status(401).json({ message: "Incorrect email or password" });
+    }
+
+    // Create a token
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
+
+    return res.json({
+      result: 200,
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        token: token,
+      },
     });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error("loginUser error:", err);
+    return res.status(500).json({ message: "Server error" });
   }
 };
 
@@ -86,6 +114,5 @@ module.exports = {
   getUser,
   updateUser,
   deleteUser,
-  registerUser,
   loginUser,
 };

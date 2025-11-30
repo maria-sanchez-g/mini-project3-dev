@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"; // r-r-d access to url params
 import axios from "axios";
+import api from "../api/axios";
+
 
 export default function RecipeDetails() {
   // extract id from route params
@@ -29,6 +31,31 @@ export default function RecipeDetails() {
     // dependency array
   }, [id]); // run effect if id changes
 
+  async function handleSave() {
+    if (!recipe) return;
+
+    try {
+      await api.post(
+        "/saved",
+        {
+          recipeID: recipe.id,       // Forkify recipe ID
+          title: recipe.title,
+          image: recipe.image_url,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      alert("Recipe saved!");
+    } catch (err) {
+      console.error("Error saving recipe:", err);
+      alert("You must be logged in to save recipes.");
+    }
+  }
+
   // loading message
   if (!recipe) return <p>Loading…</p>;
 
@@ -37,7 +64,7 @@ export default function RecipeDetails() {
     <div>
       <h2>{recipe.title}</h2>
       <img src={recipe.image_url} alt={recipe.title} width="300" />
-
+      <button onClick={handleSave}>Save Recipe</button>
       <h3>Ingredients</h3>
       <ul>
         {recipe.ingredients.map((ingredient, index) => (
