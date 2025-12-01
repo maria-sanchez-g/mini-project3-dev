@@ -1,9 +1,13 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext"
 
 export function FirstPage() {
+  // get userName from context
+  const { userName } = useContext(UserContext);
   return (
     <div style={styles.container}>
-      <h1>Welcome</h1>
+      <h1>Welcome{userName ? `, ${userName}` : ""}</h1>
 
       <div style={styles.buttons}>
         <Link to="/login" style={styles.button}>Login</Link>

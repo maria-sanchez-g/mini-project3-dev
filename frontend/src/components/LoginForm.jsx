@@ -1,8 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { UserContext } from "../context/UserContext";
+import { useNavigate } from "react-router-dom";
 
 export default function LoginPage() {
+  const { setUserName } = useContext(UserContext);
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -22,10 +26,20 @@ export default function LoginPage() {
         if (res.data && res.data.data && res.data.data.token) {
         localStorage.setItem("token", res.data.data.token);
       }
+
+      if (res.data?.data?.name) {
+        // store in context
+        setUserName(res.data.data.name); 
+        // persist
+        localStorage.setItem("userName", res.data.data.name); 
+      }
       
       alert("Login successful");
       // here you can store user info in localStorage if you want
       // localStorage.setItem("userEmail", res.data.email);
+
+      // redirect to homepage
+      navigate("/");
     } catch (err) {
       console.error("Login error:", err);
 
