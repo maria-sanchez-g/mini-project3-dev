@@ -1,12 +1,25 @@
 import { Link } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../context/UserContext"
 
 export function FirstPage() {
+  // get userName from context
+  const { userName, logout } = useContext(UserContext);
+
+  const handleLogout = () => {
+    logout();
+  }
+
   return (
     <div style={styles.container}>
-      <h1>Welcome</h1>
+      <h1>Welcome{userName ? `, ${userName}` : ""}</h1>
 
       <div style={styles.buttons}>
-        <Link to="/login" style={styles.button}>Login</Link>
+        {userName ? (
+          <button style={styles.button} onClick={handleLogout}>Logout</button>
+        ) : (
+          <Link to="/login" style={styles.button}>Login</Link>
+        )}
         <Link to="/recipe" style={styles.button}>Search Recipes</Link>
         <Link to="/saved" style={styles.button}>My Saved Recipes</Link>
       </div>
