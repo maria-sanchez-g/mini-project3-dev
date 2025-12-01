@@ -1,5 +1,5 @@
 ## Mini Project 3
-## Group project
+### Group project
 
 #Stack:
 + Node 
