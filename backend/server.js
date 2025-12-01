@@ -1,7 +1,7 @@
 const express = require("express"); //In Node.js, require() is the built-in function used to import code from another file.
 const cors = require("cors");
 const colors = require("colors");
-const dotenv = require("dotenv").config({ path: "./backend/.env" });
+const dotenv = require("dotenv").config();
 
 // database connection logic
 const connectDB = require("./config/dbConnect");

@@ -1,8 +1,10 @@
+// import routing components
 import { Routes, Route } from "react-router-dom"
 
+// page components to render for specific URLs
 import { HomePage } from "../pages/HomePage"
 import { FirstPage } from "../pages/FirstPage"
-import { RecipeDetailsPage } from "../pages/RecipeDetailsPage"
+import { RecipeDetailsPage } from "../pages/RecipeDetailsPage";
 import { LoginPage } from "../pages/LoginPage"
 import { SavedRecipesPage } from "../pages/SavedRecipesPage";
 

@@ -57,12 +57,12 @@ const updateUser = (req, res) => {
   const data = req.body;
   console.log(data);
   const id = req.params.id;
-  Models.User.findByIdAndUpdate(id, data, {new: true})
-    .then(data => res.send({result: 200, data: data}))
-    .catch(err => {
-        console.log(err);
-        res.send({result: 500, error: err.message})
-    })
+  Models.User.findByIdAndUpdate(id, data, { new: true })
+    .then((data) => res.send({ result: 200, data: data }))
+    .catch((err) => {
+      console.log(err);
+      res.send({ result: 500, error: err.message });
+    });
 };
 
 const deleteUser = (req, res) => {
