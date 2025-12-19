@@ -1,5 +1,4 @@
-## Mini Project 3
-## Group project
+## Mini Project 4
 
 #Stack:
 + Node 
@@ -95,3 +94,44 @@ Server running on port 8080
 
 In the frontend folder run:
 npm run dev
+
+
+
+---socket.io
+
+1-in miniprject4
+-install socket npm install socket.io
+
+2-Update backend/server.js to use an HTTP server + Socket.IO
+-in backend
+
+3-Update .env file
+FRONTEND_URL=http://localhost:5173
+
+4- frontend changes
+Install socket.io
+
+5- frontend / api / socket.js
+create a reusable socket client
+
+create .env file and include VITE_SOCKET_URL=
+
+6- Build the ChatWidget component
+frontend/src/components/ChatWidget.jsx
+
+7- Render the widget on every page
+frontend/src/App.jsx:<ChatWidget />
+
+//TESTING
+frontend
+http://localhost:5173/
+
+
+backend
+http://localhost:8080
+
+
+//NEW ADDITIONS, SOCKET.IO
+“I added Socket.IO to create a real-time chat widget.”
+“Frontend emits chat:message events; backend listens and responds with chat:bot_response.”
+“This demonstrates event-driven, bidirectional communication in a client/server model.”

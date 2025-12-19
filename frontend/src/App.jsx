@@ -1,11 +1,13 @@
 import './App.css'
-import { AppRoutes } from './routes/AppRoutes'
+import { AppRoutes } from './routes/AppRoutes';
+import { ChatWidget } from "./components/ChatWidget";
 
 function App() {
 
   return (
     <>
       <AppRoutes />
+      <ChatWidget />
     </>
   )
 }
